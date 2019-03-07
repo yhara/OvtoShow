@@ -1,0 +1,2 @@
+module AtendeeHelper
+end
