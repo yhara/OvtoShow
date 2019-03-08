@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'presenter/index'
   get 'atendee/index'
   get 'presentor/index'
   get 'screen', to: 'screen#index'
