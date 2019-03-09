@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  get 'main/screen'
+  get 'main/presenter'
+  get 'main/atendee'
   get 'presenter', to: 'presenter#index'
   get 'screen', to: 'screen#index'
   get 'atendee', to: 'atendee#index'
