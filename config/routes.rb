@@ -1,9 +1,6 @@
 Rails.application.routes.draw do
-  get 'main/screen'
-  get 'main/presenter'
-  get 'main/atendee'
-  get 'presenter', to: 'presenter#index'
-  get 'screen', to: 'screen#index'
-  get 'atendee', to: 'atendee#index'
+  get 'presenter', to: 'main#presenter'
+  get 'screen', to: 'main#screen'
+  get 'atendee', to: 'main#atendee'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
