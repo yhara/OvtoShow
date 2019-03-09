@@ -1,4 +1,6 @@
 class MainController < ApplicationController
+  before_action :set_slides
+
   def screen
     render :index
   end
@@ -9,5 +11,24 @@ class MainController < ApplicationController
 
   def atendee
     render :index
+  end
+
+  private
+
+  def set_slides
+    @slides = [
+      {
+        layout: "title",
+        title: "Ovto: Frontend-...",
+      },
+      {
+        layout: "list",
+        content: [
+          "A",
+          "A'",
+          "B",
+        ]
+      }
+    ]
   end
 end

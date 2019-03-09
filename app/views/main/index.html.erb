@@ -1,6 +1,12 @@
 <div id='ovto-app' />
+<div id='ovtoshow-slides'><%= @slides.to_json %></div>
+
 <%= opal_tag do %>
   app = OvtoApp.instance
   app.run(id: 'ovto-app')
   app.actions.set_mode(mode: '<%= action_name %>')
+  # Does not work(why?)
+  # app.actions.set_slides(slides: `<%== @slides.to_json %>`))
+  json = `document.querySelector('#ovtoshow-slides').textContent`;
+  app.actions.set_slides(slides: JSON.parse(json))
 <% end %>
