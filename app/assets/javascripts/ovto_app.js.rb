@@ -53,8 +53,8 @@ class OvtoApp < Ovto::App
     def render(state:)
       o '.MainComponent' do
         o 'div', state.pretty_inspect
-        o Screen
         o PageControl if state.presenter?
+        o Screen
       end
     end
 
