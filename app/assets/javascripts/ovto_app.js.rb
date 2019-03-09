@@ -5,6 +5,15 @@ require 'singleton'
 class OvtoApp < Ovto::App
   include Singleton
 
+  def run(*args)
+    super
+    %x{
+      document.addEventListener('keydown', function(e) {
+        #{actions.on_keydown(event: `e`)}
+      });
+    }
+  end
+
   class State < Ovto::State
     item :presenter_page, default: 1
     item :mode, default: nil
@@ -18,6 +27,16 @@ class OvtoApp < Ovto::App
   end
 
   class Actions < Ovto::Actions
+    def on_keydown(event:)
+      case event.JS['key']
+      when "ArrowRight"
+        actions.presenter_next_page()
+      when "ArrowLeft"
+        actions.presenter_prev_page()
+      end
+      nil
+    end
+
     # - mode: "screen", "presenter", "atendee"
     def set_mode(mode:)
       p mode
