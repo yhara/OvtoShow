@@ -39,7 +39,6 @@ class OvtoApp < Ovto::App
 
     # - mode: "screen", "presenter", "atendee"
     def set_mode(mode:)
-      p mode
       return {mode: mode}
     end
 
