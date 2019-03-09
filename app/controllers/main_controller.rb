@@ -23,7 +23,7 @@ class MainController < ApplicationController
       },
       {
         layout: "list",
-        content: [
+        items: [
           "A",
           "A'",
           "B",

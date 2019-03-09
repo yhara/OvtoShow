@@ -60,8 +60,38 @@ class OvtoApp < Ovto::App
 
     class Screen < Ovto::Component
       def render(state:)
+        slide = state.slide
         o '.Screen', style: {border: "1px solid black"} do
-          o 'pre', state.slide.inspect
+          case slide['layout']
+          when 'title'
+            o TitleSlide, slide: slide
+          when 'list'
+            o ListSlide, slide: slide
+          else 
+            raise "unknown layout: #{slide['layout']}" 
+          end
+        end
+      end
+    end
+
+    class TitleSlide < Ovto::Component
+      def render(slide:)
+        o '.TitleSlide' do
+          o "h1", slide['title']
+        end
+      end
+    end
+
+    class ListSlide < Ovto::Component
+      def render(slide:)
+        o '.ListSlide' do
+          o "ul" do
+            slide['items'].each do |line|
+              o "li", {
+                style: {"font-size" => "10vh"},
+              }, line
+            end
+          end
         end
       end
     end
