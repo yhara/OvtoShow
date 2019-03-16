@@ -1,3 +1,5 @@
+require 'ovto_show/slide_parser'
+
 class MainController < ApplicationController
   before_action :set_slides
 
@@ -16,19 +18,20 @@ class MainController < ApplicationController
   private
 
   def set_slides
-    @slides = [
-      {
-        layout: "title",
-        title: "Ovto: Frontend-...",
-      },
-      {
-        layout: "list",
-        items: [
-          "A",
-          "A'",
-          "B",
-        ]
-      }
-    ]
+    @parser ||= OvtoShow::SlideParser.new
+    @slides = @parser.parse(<<~EOD)
+# Ovto: Frontend web framework for Rubyists
+
+- author: Yutaka Hara
+- event: RubyKaigi 2019 Fukuoka
+- date: 2019/04/19
+
+## Summary
+
+- Ovto is a web framework 
+- VirtualDOM + Single state (like react-redux)
+- yet you can write apps in Ruby
+
+EOD
   end
 end
