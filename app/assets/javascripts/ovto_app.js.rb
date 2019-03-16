@@ -15,14 +15,14 @@ class OvtoApp < Ovto::App
   end
 
   class State < Ovto::State
-    item :presenter_page, default: 1
+    item :presenter_page, default: 0
     item :mode, default: nil
     item :slides, default: nil
 
     def presenter?; self.mode == "presenter"; end
 
     def slide
-      self.slides[self.presenter_page-1]
+      self.slides[self.presenter_page]
     end
   end
 
@@ -47,19 +47,23 @@ class OvtoApp < Ovto::App
     end
 
     def presenter_prev_page(state:)
-      actions.update_presenter_page(page: state.presenter_page - 1)
-      nil
+      if state.presenter_page > 0
+        actions.update_presenter_page(page: state.presenter_page - 1)
+      end
+      return nil
     end
 
     def presenter_next_page(state:)
-      actions.update_presenter_page(page: state.presenter_page + 1)
-      nil
+      if state.presenter_page < (state.slides.length-1)
+        actions.update_presenter_page(page: state.presenter_page + 1)
+      end
+      return nil
     end
 
     def update_presenter_page(page:)
       `App.presentation.send_action("set_presenter_page", {page: #{page}})`
       actions.set_presenter_page(page: page)
-      nil
+      return nil
     end
 
     def set_presenter_page(page:)
