@@ -1,6 +1,6 @@
 require 'ovto'
-require 'pp'
 require 'singleton'
+require 'my_pp'
 
 class OvtoApp < Ovto::App
   include Singleton
@@ -70,7 +70,7 @@ class OvtoApp < Ovto::App
   class MainComponent < Ovto::Component
     def render(state:)
       o '.MainComponent' do
-        o 'div', state.pretty_inspect
+        o 'pre', state.pretty_inspect
         o PageControl if state.presenter?
         o Screen
       end
