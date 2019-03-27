@@ -74,9 +74,22 @@ class OvtoApp < Ovto::App
   class MainComponent < Ovto::Component
     def render(state:)
       o '.MainComponent' do
-        o 'pre', state.pretty_inspect
+        o StateInspector
         o PageControl if state.presenter?
         o Screen
+      end
+    end
+
+    class StateInspector < Ovto::Component
+      def render(state:)
+        o '.StateInspector', style: {
+          position: :fixed,
+          top: 0,
+          left: 0,
+          bottom: 0, 'overflow-y': :auto, # Make it scrollable
+        } do
+          o 'pre', state.pretty_inspect
+        end
       end
     end
 
