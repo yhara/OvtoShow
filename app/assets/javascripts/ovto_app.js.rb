@@ -120,10 +120,11 @@ class OvtoApp < Ovto::App
     class ListSlide < Ovto::Component
       def render(slide:)
         o '.ListSlide' do
+          o "h2", slide['title']
           o "ul" do
             slide['items'].each do |line|
               o "li", {
-                style: {"font-size" => "10vh"},
+                style: {"font-size" => "5vh"},
               }, line
             end
           end
