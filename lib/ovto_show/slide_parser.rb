@@ -9,6 +9,12 @@ module OvtoShow
       state = :normal
       str.each_line do |line|
         case
+        when line.strip == "----"
+          break
+        when line.strip.empty? || line.start_with?
+          page << line if state == :code
+        end
+          # empty line
         when line.rstrip == "```"
           page << line
           state = (state == :code ? :normal : :code)
@@ -19,6 +25,8 @@ module OvtoShow
             page.clear
           end
           page << line
+        when line.start_with?("//") || line.start_with?("~")
+          page << line if state == :code
         else
           page << line
         end
