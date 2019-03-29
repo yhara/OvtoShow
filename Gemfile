@@ -60,4 +60,10 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'opal-rails'
-gem 'ovto'
+gem 'ovto'#, path: "~/proj/ovto"
+
+gem 'commonmarker'
+
+group :development do
+  gem 'websocket-client-simple'
+end

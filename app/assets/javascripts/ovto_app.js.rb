@@ -5,6 +5,10 @@ require 'my_pp'
 class OvtoApp < Ovto::App
   include Singleton
 
+  def self.slides
+    `window.Opal.OvtoApp.slides`
+  end
+
   def run(*args)
     super
     %x{
@@ -22,7 +26,8 @@ class OvtoApp < Ovto::App
     def presenter?; self.mode == "presenter"; end
 
     def slide
-      self.slides[self.presenter_page]
+      page = self.presenter_page
+      `window.Opal.OvtoApp.slides[page]`
     end
   end
 
@@ -42,10 +47,6 @@ class OvtoApp < Ovto::App
       return {mode: mode}
     end
 
-    def set_slides(slides:)
-      return {slides: slides}
-    end
-
     def presenter_prev_page(state:)
       if state.presenter_page > 0
         actions.update_presenter_page(page: state.presenter_page - 1)
@@ -54,7 +55,7 @@ class OvtoApp < Ovto::App
     end
 
     def presenter_next_page(state:)
-      if state.presenter_page < (state.slides.length-1)
+      if state.presenter_page < (OvtoApp.slides.length-1)
         actions.update_presenter_page(page: state.presenter_page + 1)
       end
       return nil
@@ -95,40 +96,16 @@ class OvtoApp < Ovto::App
 
     class Screen < Ovto::Component
       def render(state:)
-        slide = state.slide
         o '.Screen', style: {border: "1px solid black"} do
-          case slide['layout']
-          when 'title'
-            o TitleSlide, slide: slide
-          when 'list'
-            o ListSlide, slide: slide
-          else 
-            raise "unknown layout: #{slide['layout']}" 
-          end
+          o Slide, slide: state.slide
         end
       end
     end
 
-    class TitleSlide < Ovto::Component
+    class Slide < Ovto::Component
       def render(slide:)
-        o '.TitleSlide' do
-          o "h1", slide['title']
-        end
-      end
-    end
-
-    class ListSlide < Ovto::Component
-      def render(slide:)
-        o '.ListSlide' do
-          o "h2", slide['title']
-          o "ul" do
-            slide['items'].each do |line|
-              o "li", {
-                style: {"font-size" => "5vh"},
-              }, line
-            end
-          end
-        end
+        # Inject js VDOM obj
+        o '.Slide', slide
       end
     end
 

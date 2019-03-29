@@ -1,73 +1,62 @@
+require 'commonmarker'
+
 module OvtoShow
   class SlideParser
-    def initialize
-    end
-
     def parse(str)
-      pages = []
-      page = []
-      state = :normal
-      str.each_line do |line|
-        case
-        when line.strip == "----"
-          break
-        when line.strip.empty? || line.start_with?
-          page << line if state == :code
-        end
-          # empty line
-        when line.rstrip == "```"
-          page << line
-          state = (state == :code ? :normal : :code)
-        when line.start_with?("#")
-          unless state == :code
-            # Flush current page
-            pages << parse_page(page) unless page.empty?
-            page.clear
-          end
-          page << line
-        when line.start_with?("//") || line.start_with?("~")
-          page << line if state == :code
-        else
-          page << line
-        end
-      end
-      pages << parse_page(page)
-      return pages
+      doc = CommonMarker.render_doc(
+        str,
+        :UNSAFE  # Allow raw/custom HTML and unsafe links.
+      )
+      pages = doc.each.slice_before{|x| x.type == :header}
+                      .select{|x| x.first.type == :header}
+      return pages.map{|nodes|
+        { 
+          nodeName: "div",
+          attributes: {},
+          children: nodes.map{|x| convert_node(x)}.compact,
+        }
+      }
     end
 
     private
 
-    def parse_page(lines)
-      case lines.first
-      when /^# /
-        parse_title_page(lines)
+    def convert_node(node)
+      case node.type
+      when :header
+        {
+          nodeName: "h#{node.header_level}",
+          attributes: {},
+          children: [node.first_child&.string_content],
+        }
+      when :code_block
+        {
+          nodeName: "pre",
+          attributes: {},
+          children: [{
+            nodeName: "code",
+            attributes: {},
+            children: node.string_content,
+          }],
+        }
+      when :list, :list_item, :paragraph
+        tag_name = {list: "ul", list_item: "li", paragraph: "p"}[node.type]
+        {
+          nodeName: tag_name,
+          attributes: {},
+          children: node.map{|node| convert_node(node)}.compact,
+        }
+      when :text
+        str = node.string_content
+        str.start_with?('~ ') ? nil : str
+      when :softbreak
+        nil
       else
-        parse_list_page(lines)
+        node
       end
     end
-
-    def parse_title_page(lines)
-      title_line, *rest = *lines
-      title = title_line[/^# (.*)/, 1].strip
-      hash = rest.map(&:strip).reject(&:empty?).map{|l|
-        l =~ /^- (\w+):(.+)/
-        [$1.to_sym, $2.strip]
-      }.to_h
-      return {
-        layout: "title",
-        title: title
-      }.merge(hash)
-    end
-
-    def parse_list_page(lines)
-      title_line, *rest = *lines
-      title = title_line[/^## (.*)/, 1].strip
-      items = rest.map(&:strip).reject(&:empty?).map{|l| l[/^- (.*)/, 1]}
-      return {
-        layout: "list",
-        title: title,
-        items: items
-      }
-    end
   end
+end
+
+if $0 == __FILE__
+  pp OvtoShow::SlideParser.new.parse(File.read('data/slide.txt'))
 end

@@ -7,6 +7,9 @@
   app.actions.set_mode(mode: '<%= action_name %>')
   # Does not work(why?)
   # app.actions.set_slides(slides: `<%== @slides.to_json %>`))
-  json = `document.querySelector('#ovtoshow-slides').textContent`;
-  app.actions.set_slides(slides: JSON.parse(json))
+  %x{
+    var json = document.querySelector('#ovtoshow-slides').textContent;
+    window.Opal.OvtoApp.slides = JSON.parse(json);
+  }
+  # app.actions.set_slides(slides: `JSON.parse(json)`)
 <% end %>
