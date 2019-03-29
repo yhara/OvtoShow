@@ -1,3 +1,15 @@
+require 'native'
+
+class MyPP
+  def self.pretty_inspect(obj)
+    if native?(obj)
+      "#<native>"
+    else
+      obj.pretty_inspect
+    end
+  end
+end
+
 class Object
   def pretty_inspect
     inspect
@@ -14,7 +26,7 @@ end
 
 class Array
   def pretty_inspect
-    items = self.map(&:pretty_inspect)
+    items = self.map{|x| MyPP.pretty_inspect(x)}
     total_len = items.map(&:size).inject(0, :+)
     if items.any?{|s| s.include?("\n")} || total_len > 80
       "[\n" +
@@ -30,7 +42,7 @@ end
 
 class Hash
   def pretty_inspect
-    items = self.map{|k, v| [k.pretty_inspect, v.pretty_inspect]}
+    items = self.map{|k, v| [MyPP.pretty_inspect(k), MyPP.pretty_inspect(v)]}
     total_len = items.map{|k, v| k.size + v.size}.inject(0, :+)
     if items.flatten(1).any?{|s| s.include?("\n")} || total_len > 80
       "{\n" +
