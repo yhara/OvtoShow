@@ -26,6 +26,7 @@ class OvtoApp < Ovto::App
     def presenter_mode?; self.mode == "presenter"; end
     def screen_mode?; self.mode == "screen"; end
     def atendee_mode?; self.mode == "atendee"; end
+    def print_mode?; self.mode == "print"; end
 
     def get_slide(page)
       `window.Opal.OvtoApp.slides[page]`
@@ -96,10 +97,35 @@ class OvtoApp < Ovto::App
   class MainComponent < Ovto::Component
     def render(state:)
       o '.MainComponent' do
-        o StateInspector
-        o PageControl unless state.screen_mode?
-        o MySlide if state.atendee_mode?
-        o Screen
+        if state.print_mode?
+          o AllSlides
+        else
+          o StateInspector
+          o PageControl unless state.screen_mode?
+          o MySlide if state.atendee_mode?
+          o Screen
+        end
+      end
+    end
+
+    class AllSlides < Ovto::Component
+      def render(state:)
+        o '.AllSlides' do
+          OvtoApp.slides.each do |slide|
+            o PrintSlide, slide: slide
+          end
+        end
+      end
+    end
+
+    class PrintSlide < Ovto::Component
+      def render(slide:)
+        style = {
+          border: "1px solid black",
+          #'page-break-after': :always,
+        }
+        # Inject js VDOM obj
+        o '.PrintSlide', {style: style}, slide
       end
     end
 

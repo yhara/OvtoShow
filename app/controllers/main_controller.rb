@@ -15,6 +15,10 @@ class MainController < ApplicationController
     render :index
   end
 
+  def print
+    render :index
+  end
+
   private
 
   def set_slides
