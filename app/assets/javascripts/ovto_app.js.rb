@@ -125,7 +125,7 @@ class OvtoApp < Ovto::App
           #'page-break-after': :always,
         }
         o '.PrintSlide', {style: style} do
-          o SlideContent, slide
+          o SlideContent, slide: slide
         end
       end
     end
