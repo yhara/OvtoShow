@@ -13,3 +13,7 @@
  *= require_tree .
  *= require_self
  */
+
+code {
+  font-family: Monaco, monospace;
+}
