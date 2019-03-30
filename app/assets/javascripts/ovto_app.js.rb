@@ -23,9 +23,9 @@ class OvtoApp < Ovto::App
     item :my_page, default: 0
     item :mode, default: nil
 
-    def presenter?; self.mode == "presenter"; end
-    def screen?; self.mode == "screen"; end
-    def atendee?; self.mode == "atendee"; end
+    def presenter_mode?; self.mode == "presenter"; end
+    def screen_mode?; self.mode == "screen"; end
+    def atendee_mode?; self.mode == "atendee"; end
 
     def get_slide(page)
       `window.Opal.OvtoApp.slides[page]`
@@ -43,17 +43,16 @@ class OvtoApp < Ovto::App
       nil
     end
 
-    # - mode: "screen", "presenter", "atendee"
     def set_mode(mode:)
       return {mode: mode}
     end
 
     def next_page(state:)
-      state.presenter? ? actions.presenter_next_page : actions.my_next_page
+      state.presenter_mode? ? actions.presenter_next_page : actions.my_next_page
     end
 
     def prev_page(state:)
-      state.presenter? ? actions.presenter_prev_page : actions.my_prev_page
+      state.presenter_mode? ? actions.presenter_prev_page : actions.my_prev_page
     end
 
     def presenter_prev_page(state:)
@@ -98,8 +97,8 @@ class OvtoApp < Ovto::App
     def render(state:)
       o '.MainComponent' do
         o StateInspector
-        o PageControl unless state.screen?
-        o MySlide if state.atendee?
+        o PageControl unless state.screen_mode?
+        o MySlide if state.atendee_mode?
         o Screen
       end
     end
