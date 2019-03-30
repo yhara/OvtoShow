@@ -31,7 +31,7 @@ module OvtoShow
       when :code_block
         {
           nodeName: "pre",
-          attributes: {},
+          attributes: {lang: node.fence_info},
           children: [{
             nodeName: "code",
             attributes: {},
