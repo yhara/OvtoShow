@@ -50,6 +50,12 @@ module OvtoShow
         str.start_with?('~ ') ? nil : str
       when :softbreak
         nil
+      when :image
+        {
+          nodeName: "img",
+          attributes: {src: node.url},
+          children: []
+        }
       else
         node
       end
