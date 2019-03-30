@@ -38,16 +38,30 @@ module OvtoShow
             children: node.string_content,
           }],
         }
-      when :list, :list_item, :paragraph
-        tag_name = {list: "ul", list_item: "li", paragraph: "p"}[node.type]
+      when :list, :list_item
+        tag_name = {list: "ul", list_item: "li"}[node.type]
         {
           nodeName: tag_name,
           attributes: {},
           children: node.map{|node| convert_node(node)}.compact,
         }
+      when :paragraph
+        children = node.map{|node| convert_node(node)}.compact
+        if children.first.is_a?(String) && children.first.start_with?("~ ")
+          {
+            nodeName: "pre",
+            attributes: {class: "presenter-note"},
+            children: [children.join("\n")],
+          }
+        else
+          {
+            nodeName: "p",
+            attributes: {},
+            children: children,
+          }
+        end
       when :text
-        str = node.string_content
-        str.start_with?('~ ') ? nil : str
+        node.string_content
       when :softbreak
         nil
       when :image
