@@ -145,15 +145,15 @@ class OvtoApp < Ovto::App
     class Screen < Ovto::Component
       def render(state:)
         o '.Screen', style: {border: "1px solid black"} do
-          o Slide, slide: state.get_slide(state.presenter_page)
+          o ScreenSlide, slide: state.get_slide(state.presenter_page)
         end
       end
     end
 
-    class Slide < Ovto::Component
+    class ScreenSlide < Ovto::Component
       def render(slide:)
         # Inject js VDOM obj
-        o '.Slide', slide
+        o '.ScreenSlide', slide
       end
     end
 
