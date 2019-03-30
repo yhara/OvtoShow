@@ -66,4 +66,9 @@ gem 'commonmarker'
 
 group :development do
   gem 'websocket-client-simple'
+  gem 'capistrano'
+  gem 'capistrano-rails'
+  gem 'capistrano-passenger'
+  gem 'capistrano-bundler'
+  gem 'capistrano-rbenv'
 end
