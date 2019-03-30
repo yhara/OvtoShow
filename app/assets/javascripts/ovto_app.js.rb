@@ -124,8 +124,9 @@ class OvtoApp < Ovto::App
           border: "1px solid black",
           #'page-break-after': :always,
         }
-        # Inject js VDOM obj
-        o '.PrintSlide', {style: style}, slide
+        o '.PrintSlide', {style: style} do
+          o SlideContent, slide
+        end
       end
     end
 
@@ -145,15 +146,8 @@ class OvtoApp < Ovto::App
     class Screen < Ovto::Component
       def render(state:)
         o '.Screen', style: {border: "1px solid black"} do
-          o ScreenSlide, slide: state.get_slide(state.presenter_page)
+          o SlideContent, slide: state.get_slide(state.presenter_page)
         end
-      end
-    end
-
-    class ScreenSlide < Ovto::Component
-      def render(slide:)
-        # Inject js VDOM obj
-        o '.ScreenSlide', slide
       end
     end
 
@@ -163,10 +157,19 @@ class OvtoApp < Ovto::App
           border: "1px solid black",
           background: "#eee",
         }
-        # Inject js VDOM obj
-        o '.MySlide', {style: style}, state.get_slide(state.my_page)
+        o '.MySlide', {style: style} do
+          o SlideContent, state.get_slide(state.my_page)
+        end
       end
     end
+
+    class SlideContent < Ovto::Component
+      def render(slide:)
+        # Inject js VDOM obj
+        o '.SlideContent', slide
+      end
+    end
+
 
     class PageControl < Ovto::Component
       def render(state:)
