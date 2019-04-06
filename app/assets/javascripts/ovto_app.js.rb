@@ -28,6 +28,10 @@ class OvtoApp < Ovto::App
     def atendee_mode?; self.mode == "atendee"; end
     def print_mode?; self.mode == "print"; end
 
+    def hide_presenter_note?
+      %w(screen atendee).include?(self.mode)
+    end
+
     def get_slide(page)
       `window.Opal.OvtoApp.slides[page]`
     end
@@ -49,11 +53,13 @@ class OvtoApp < Ovto::App
     end
 
     def next_page(state:)
-      state.presenter_mode? ? actions.presenter_next_page : actions.my_next_page
+      (state.presenter_mode? || state.screen_mode?) ? actions.presenter_next_page
+                                                   : actions.my_next_page
     end
 
     def prev_page(state:)
-      state.presenter_mode? ? actions.presenter_prev_page : actions.my_prev_page
+      (state.presenter_mode? || state.screen_mode?) ? actions.presenter_prev_page
+                                                   : actions.my_prev_page
     end
 
     def presenter_prev_page(state:)
@@ -104,6 +110,9 @@ class OvtoApp < Ovto::App
           o PageControl unless state.screen_mode?
           o MySlide if state.atendee_mode?
           o Screen
+          if state.hide_presenter_note?
+            o "style", ".presenter-note{ display: none; }"
+          end
         end
       end
     end
