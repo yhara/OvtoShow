@@ -41,9 +41,9 @@ class OvtoApp < Ovto::App
   class Actions < Ovto::Actions
     def on_keydown(event:)
       case event.JS['key']
-      when "ArrowRight"
+      when "ArrowRight", "j"
         actions.next_page()
-      when "ArrowLeft"
+      when "ArrowLeft", "k"
         actions.prev_page()
       end
       nil
