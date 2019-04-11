@@ -26,7 +26,16 @@ end
 
 class Array
   def pretty_inspect
-    items = self.map{|x| MyPP.pretty_inspect(x)}
+    if self.length > 2
+      items = [
+        MyPP.pretty_inspect(self[0]),
+        MyPP.pretty_inspect(self[1]),
+        "...",
+      ]
+    else
+      items = self.map{|x| MyPP.pretty_inspect(x)}
+    end
+
     total_len = items.map(&:size).inject(0, :+)
     if items.any?{|s| s.include?("\n")} || total_len > 80
       "[\n" +
