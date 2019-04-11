@@ -45,6 +45,10 @@ class OvtoApp < Ovto::App
         actions.next_page()
       when "ArrowLeft", "k"
         actions.prev_page()
+      when "r"
+        actions.reload_slides()
+      else
+        #console.log(event.JS['key'])
       end
       nil
     end
@@ -102,6 +106,14 @@ class OvtoApp < Ovto::App
       else
         nil
       end
+    end
+
+    def reload_slides
+      Ovto.fetch('/slides.json').then {|json|
+        actions.set_slides(slides: json)
+      }.fail {|e|
+        console.log("get_slides", e)
+      }
     end
   end
 

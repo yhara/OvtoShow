@@ -62,6 +62,7 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'opal-rails'
 gem 'ovto'#, path: "~/proj/ovto"
 
+gem 'jb'
 gem 'commonmarker'
 
 group :development do

@@ -19,6 +19,16 @@ class MainController < ApplicationController
     render :index
   end
 
+  # 
+  # APIs
+  #
+
+  def slides
+    respond_to do |format|
+      format.json
+    end
+  end
+
   private
 
   def set_slides
