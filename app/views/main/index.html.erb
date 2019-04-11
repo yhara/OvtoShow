@@ -1,5 +1,5 @@
 <div id='ovto-app'></div>
-<div id='ovtoshow-slides' style='display: none'><%= @slides.to_json %></div>
+<div id='ovtoshow-slides' style='display: none'><%== @slides.to_json %></div>
 
 <%= opal_tag do %>
   app = OvtoApp.instance
@@ -7,9 +7,10 @@
   app.actions.set_mode(mode: '<%= action_name %>')
   # Does not work(why?)
   # app.actions.set_slides(slides: `<%== @slides.to_json %>`))
+  json_str = nil
   %x{
-    var json = document.querySelector('#ovtoshow-slides').textContent;
-    window.Opal.OvtoApp.slides = JSON.parse(json);
+    json_str = document.querySelector('#ovtoshow-slides').textContent;
+    //window.Opal.OvtoApp.slides = JSON.parse(json_str);
   }
-  # app.actions.set_slides(slides: `JSON.parse(json)`)
+  app.actions.set_slides(slides: JSON.parse(json_str))
 <% end %>

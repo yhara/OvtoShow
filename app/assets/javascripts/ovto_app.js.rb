@@ -19,6 +19,7 @@ class OvtoApp < Ovto::App
   end
 
   class State < Ovto::State
+    item :slides, default: []
     item :presenter_page, default: 0
     item :my_page, default: 0
     item :mode, default: nil
@@ -33,7 +34,7 @@ class OvtoApp < Ovto::App
     end
 
     def get_slide(page)
-      `window.Opal.OvtoApp.slides[page]`
+      self.slides[page]
     end
   end
 
@@ -50,6 +51,10 @@ class OvtoApp < Ovto::App
 
     def set_mode(mode:)
       return {mode: mode}
+    end
+
+    def set_slides(slides:)
+      return {slides: slides}
     end
 
     def next_page(state:)
@@ -69,7 +74,7 @@ class OvtoApp < Ovto::App
     end
 
     def presenter_next_page(state:)
-      if state.presenter_page < (OvtoApp.slides.length-1)
+      if state.presenter_page < (state.slides.length-1)
         actions.update_presenter_page(page: state.presenter_page + 1)
       end
     end
@@ -92,7 +97,7 @@ class OvtoApp < Ovto::App
     end
 
     def my_next_page(state:)
-      if state.my_page < (OvtoApp.slides.length-1)
+      if state.my_page < (state.slides.length-1)
         {my_page: state.my_page + 1}
       else
         nil
@@ -175,7 +180,7 @@ class OvtoApp < Ovto::App
     class SlideContent < Ovto::Component
       def render(slide:)
         # Inject js VDOM obj
-        o '.SlideContent', slide
+        o '.SlideContent', slide.to_n
       end
     end
 
