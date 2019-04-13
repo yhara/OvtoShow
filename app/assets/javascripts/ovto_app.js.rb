@@ -23,6 +23,9 @@ class OvtoApp < Ovto::App
     item :presenter_page, default: 0
     item :my_page, default: 0
     item :mode, default: nil
+    item :scale, default: 1.0
+    item :rotation, default: 0.0
+    item :rotation_interval_id, default: nil
 
     def presenter_mode?; self.mode == "presenter"; end
     def screen_mode?; self.mode == "screen"; end
@@ -47,8 +50,14 @@ class OvtoApp < Ovto::App
         actions.prev_page()
       when "r"
         actions.reload_slides()
+#      when "i"
+#        actions.change_scale(pt: -0.1)
+#      when "o"
+#        actions.change_scale(pt: +0.1)
+      when "x"
+        actions.toggle_rotation()
       else
-        #console.log(event.JS['key'])
+        console.log(event.JS['key'])
       end
       nil
     end
@@ -114,6 +123,26 @@ class OvtoApp < Ovto::App
       }.fail {|e|
         console.log("get_slides", e)
       }
+    end
+
+    def change_scale(state:, pt:)
+      return {scale: state.scale + pt}
+    end
+
+    def rotate(state:)
+      return {rotation: state.rotation + 1}
+    end
+
+    def toggle_rotation(state:)
+      if state.rotation_interval_id
+        `clearInterval(#{state.rotation_interval_id})`
+        return {rotation_interval_id: nil, rotation: 0.0}
+      else
+        id = `setInterval(function(){
+          #{actions.rotate}
+        }, 10)`
+        return {rotation_interval_id: id}
+      end
     end
   end
 
@@ -190,9 +219,11 @@ class OvtoApp < Ovto::App
     end
 
     class SlideContent < Ovto::Component
-      def render(slide:)
+      def render(state:, slide:)
         # Inject js VDOM obj
-        o '.SlideContent', slide.to_n
+        o '.SlideContent', {
+          style: {transform: "rotate(#{state.rotation}deg)"}
+        }, slide.to_n
       end
     end
 
