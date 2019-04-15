@@ -1,24 +1,19 @@
-# README
+# OvtoShow
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+A presentation tool made with Ovto
 
-Things you may want to cover:
+## Important files
 
-* Ruby version
+Client side
 
-* System dependencies
+- app/assets/javascripts/ovto_app.js.rb
+- app/assets/javascripts/channels/presentation.js
 
-* Configuration
+Server side
 
-* Database creation
+- app/controllers/main_controller.rb
+- app/views/main/index.html.erb
 
-* Database initialization
+## License
 
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+MIT
