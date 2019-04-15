@@ -60,7 +60,7 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'opal-rails'
-gem 'ovto'#, path: "~/proj/ovto"
+gem 'ovto', github: "yhara/ovto" #path: "~/proj/ovto"
 
 gem 'jb'
 gem 'commonmarker'
