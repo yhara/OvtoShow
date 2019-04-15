@@ -59,6 +59,8 @@ class OvtoApp < Ovto::App
         actions.toggle_show_state()
       when "x"
         actions.toggle_rotation()
+      when "z"
+        actions.reset_rotation()
       else
         console.log(event.JS['key'])
       end
@@ -143,13 +145,17 @@ class OvtoApp < Ovto::App
     def toggle_rotation(state:)
       if state.rotation_interval_id
         `clearInterval(#{state.rotation_interval_id})`
-        return {rotation_interval_id: nil, rotation: 0.0}
+        return {rotation_interval_id: nil}
       else
         id = `setInterval(function(){
           #{actions.rotate}
         }, 10)`
         return {rotation_interval_id: id}
       end
+    end
+
+    def reset_rotation(state:)
+      return {rotation: 0.0}
     end
   end
 
