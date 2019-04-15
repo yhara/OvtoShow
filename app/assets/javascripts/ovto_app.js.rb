@@ -217,7 +217,7 @@ class OvtoApp < Ovto::App
 
     class Screen < Ovto::Component
       def render(state:)
-        o '.Screen', style: {border: "1px solid black"} do
+        o '.Screen', style: {border: "none"} do
           o SlideContent, slide: state.get_slide(state.presenter_page)
         end
       end
