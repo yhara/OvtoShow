@@ -1,3 +1,18 @@
-// Place all the styles related to the main controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
+code {
+  font-family: Monaco, monospace;
+}
+
+.presenter-note {
+  border: 1px dashed gray;
+  height: auto !important;
+}
+
+.SlideContent {
+  left: 0;
+  top: 0;
+
+  font-family: 'Roboto', sans-serif;
+
+  img { height: 50vh; }
+  pre { height: 50vh; }
+}
