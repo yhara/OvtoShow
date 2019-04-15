@@ -205,6 +205,10 @@ class OvtoApp < Ovto::App
           top: 0,
           left: 0,
           bottom: 0, 'overflow-y': :auto, # Make it scrollable
+          background: "#333",
+          color: "#fff",
+          opacity: 0.7,
+          "z-index": 100, 
         } do
           o 'pre', state.pretty_inspect
         end
