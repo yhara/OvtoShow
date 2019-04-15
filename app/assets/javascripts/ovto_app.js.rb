@@ -26,6 +26,7 @@ class OvtoApp < Ovto::App
     item :scale, default: 1.0
     item :rotation, default: 0.0
     item :rotation_interval_id, default: nil
+    item :show_state, default: false
 
     def presenter_mode?; self.mode == "presenter"; end
     def screen_mode?; self.mode == "screen"; end
@@ -54,6 +55,8 @@ class OvtoApp < Ovto::App
 #        actions.change_scale(pt: -0.1)
 #      when "o"
 #        actions.change_scale(pt: +0.1)
+      when "s"
+        actions.toggle_show_state()
       when "x"
         actions.toggle_rotation()
       else
@@ -68,6 +71,10 @@ class OvtoApp < Ovto::App
 
     def set_slides(slides:)
       return {slides: slides}
+    end
+
+    def toggle_show_state(state:)
+      return {show_state: !state.show_state}
     end
 
     def next_page(state:)
@@ -152,7 +159,7 @@ class OvtoApp < Ovto::App
         if state.print_mode?
           o AllSlides
         else
-          o StateInspector
+          o StateInspector if state.show_state
           o PageControl unless state.screen_mode?
           o MySlide if state.atendee_mode?
           o Screen
