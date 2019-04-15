@@ -179,7 +179,7 @@ class OvtoApp < Ovto::App
     class AllSlides < Ovto::Component
       def render(state:)
         o '.AllSlides' do
-          OvtoApp.slides.each do |slide|
+          state.slides.each do |slide|
             o PrintSlide, slide: slide
           end
         end
