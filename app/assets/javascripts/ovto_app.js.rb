@@ -230,7 +230,7 @@ class OvtoApp < Ovto::App
           background: "#eee",
         }
         o '.MySlide', {style: style} do
-          o SlideContent, state.get_slide(state.my_page)
+          o SlideContent, slide: state.get_slide(state.my_page)
         end
       end
     end
