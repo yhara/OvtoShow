@@ -73,3 +73,7 @@ group :development do
   gem 'capistrano-bundler'
   gem 'capistrano-rbenv'
 end
+
+group :production do
+  gem 'redis'
+end
