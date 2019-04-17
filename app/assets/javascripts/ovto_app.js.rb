@@ -49,6 +49,10 @@ class OvtoApp < Ovto::App
         actions.next_page()
       when "ArrowLeft", "k"
         actions.prev_page()
+      when "a"
+        actions.first_page()
+      when "z"
+        actions.last_page()
       when "r"
         actions.reload_slides()
 #      when "i"
@@ -59,7 +63,7 @@ class OvtoApp < Ovto::App
         actions.toggle_show_state()
       when "x"
         actions.toggle_rotation()
-      when "z"
+      when "c"
         actions.reset_rotation()
       else
         console.log(event.JS['key'])
@@ -79,26 +83,33 @@ class OvtoApp < Ovto::App
       return {show_state: !state.show_state}
     end
 
+    def first_page(state:)
+      actions.change_page(to: 0)
+    end
+
+    def last_page(state:)
+      actions.change_page(to: state.slides.length)
+    end
+
     def next_page(state:)
-      (state.presenter_mode? || state.screen_mode?) ? actions.presenter_next_page
-                                                   : actions.my_next_page
+      actions.change_page(diff: +1)
     end
 
     def prev_page(state:)
-      (state.presenter_mode? || state.screen_mode?) ? actions.presenter_prev_page
-                                                   : actions.my_prev_page
+      actions.change_page(diff: -1)
     end
 
-    def presenter_prev_page(state:)
-      if state.presenter_page > 0
-        actions.update_presenter_page(page: state.presenter_page - 1)
+    def change_page(state:, to: nil, diff: nil)
+      if state.presenter_mode? || state.screen_mode?
+        actions.change_presenter_page(to: to, diff: diff)
+      else
+        actions.change_my_page(to: to, diff: diff)
       end
     end
 
-    def presenter_next_page(state:)
-      if state.presenter_page < (state.slides.length-1)
-        actions.update_presenter_page(page: state.presenter_page + 1)
-      end
+    def change_presenter_page(state:, to: nil, diff: nil)
+      to ||= state.presenter_page + diff
+      actions.update_presenter_page(page: to.clamp(0, state.slides.length-1))
     end
 
     def update_presenter_page(page:)
@@ -110,20 +121,9 @@ class OvtoApp < Ovto::App
       return {presenter_page: page}
     end
 
-    def my_prev_page(state:)
-      if state.my_page > 0
-        {my_page: state.my_page - 1}
-      else
-        nil
-      end
-    end
-
-    def my_next_page(state:)
-      if state.my_page < (state.slides.length-1)
-        {my_page: state.my_page + 1}
-      else
-        nil
-      end
+    def change_my_page(state:, to: nil, diff: nil)
+      to ||= state.my_page + diff
+      return {my_page: to.clamp(0, state.slides.length-1)}
     end
 
     def reload_slides
