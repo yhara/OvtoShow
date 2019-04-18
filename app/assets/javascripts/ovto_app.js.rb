@@ -28,6 +28,7 @@ class OvtoApp < Ovto::App
     item :rotation_interval_id, default: nil
     item :show_state, default: false
     item :page_break, default: true
+    item :emos, default: []
 
     def presenter_mode?; self.mode == "presenter"; end
     def screen_mode?; self.mode == "screen"; end
@@ -164,6 +165,18 @@ class OvtoApp < Ovto::App
     def toggle_page_break
       return {page_break: !state.page_break}
     end
+
+    def send_emo(str:)
+      `App.presentation.send_action("receive_emo", {str: #{str}})`
+      nil
+    end
+
+    def receive_emo(str:)
+      new_emos = state.emos.dup
+      new_emos.push({str: str, key: Time.new.to_f})
+      new_emos.shift if new_emos.length > 5
+      return {emos: new_emos}
+    end
   end
 
   class MainComponent < Ovto::Component
@@ -173,6 +186,8 @@ class OvtoApp < Ovto::App
           o AllSlides
         else
           o StateInspector if state.show_state
+          o Emos unless state.print_mode?
+          o FunButtons if state.atendee_mode? || state.presenter_mode?
           o PageCount if state.presenter_mode?
           o PageControl unless state.screen_mode? || state.print_mode?
           o MySlide if state.atendee_mode?
@@ -273,6 +288,49 @@ class OvtoApp < Ovto::App
       def render
         o '.PageCount' do
           "#{state.presenter_page+1}/#{state.slides.count}"
+        end
+      end
+    end
+
+    class FunButtons < Ovto::Component
+      def render
+        o '.FunButtons' do
+          ["😍", "🎂"].each do |str|
+            o 'input', {
+              type: 'button',
+              value: str,
+              onclick: ->{ actions.send_emo(str: str) }
+            }
+          end
+        end
+      end
+    end
+
+    class Emos < Ovto::Component
+      def render
+        o '.Emos', {key: 1} do
+          state.emos.each do |item|
+            o 'span', {
+              key: item[:key],
+              style: {
+                position: :fixed,
+                top: "#{rand(600)}px",
+                left: "#{rand(600)}px",
+                'font-size': :normal,
+                transition: 'all 1000ms 0s ease',
+                'z-index': -1,
+              },
+              oncreate: ->(elm){
+                console.log("created", item[:key], elm);
+                %x{
+                  setTimeout(function(){
+                    elm.style['font-size'] = '300px';
+                    elm.style['opacity'] = '0';
+                  }, 100);
+                }
+              }
+            }, item[:str]
+          end
         end
       end
     end
