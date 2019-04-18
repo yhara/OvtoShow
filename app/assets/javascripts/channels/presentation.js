@@ -9,6 +9,11 @@ App.presentation = App.cable.subscriptions.create("PresentationChannel", {
     console.log("disconnected");
   },
 
+  // Send Ovto action call to the channel
+  send_action: function(name, kwargs) {
+    return this.perform('send_action', {ovto_action: name, kwargs: kwargs});
+  },
+
   received: function(data) {
     //console.log("received", data);
     if (data['action'] == 'send_action') {
@@ -19,8 +24,4 @@ App.presentation = App.cable.subscriptions.create("PresentationChannel", {
     }
   },
 
-  // Send Ovto action call to the channel
-  send_action: function(name, kwargs) {
-    return this.perform('send_action', {ovto_action: name, kwargs: kwargs});
-  }
 });
