@@ -27,6 +27,7 @@ class OvtoApp < Ovto::App
     item :rotation, default: 0.0
     item :rotation_interval_id, default: nil
     item :show_state, default: false
+    item :page_break, default: true
 
     def presenter_mode?; self.mode == "presenter"; end
     def screen_mode?; self.mode == "screen"; end
@@ -65,6 +66,8 @@ class OvtoApp < Ovto::App
         actions.toggle_rotation()
       when "c"
         actions.reset_rotation()
+      when "b"
+        actions.toggle_page_break()
       else
         console.log(event.JS['key'])
       end
@@ -157,6 +160,10 @@ class OvtoApp < Ovto::App
     def reset_rotation(state:)
       return {rotation: 0.0}
     end
+
+    def toggle_page_break(state:)
+      return {page_break: !state.page_break}
+    end
   end
 
   class MainComponent < Ovto::Component
@@ -187,11 +194,11 @@ class OvtoApp < Ovto::App
     end
 
     class PrintSlide < Ovto::Component
-      def render(slide:)
+      def render(state:, slide:)
         style = {
           border: "1px solid black",
-          #'page-break-after': :always,
         }
+        style['page-break-after'] = :always if state.page_break
         o '.PrintSlide', {style: style} do
           o SlideContent, slide: slide
         end
