@@ -173,7 +173,7 @@ class OvtoApp < Ovto::App
           o AllSlides
         else
           o StateInspector if state.show_state
-          o PageControl unless state.screen_mode?
+          o PageControl unless state.screen_mode? || state.print_mode?
           o MySlide if state.atendee_mode?
           o Screen
           if state.hide_presenter_note?
