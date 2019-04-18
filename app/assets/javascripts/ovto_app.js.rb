@@ -29,6 +29,7 @@ class OvtoApp < Ovto::App
     item :show_state, default: false
     item :page_break, default: true
     item :emos, default: []
+    item :show_emo_buttons, default: false
 
     def presenter_mode?; self.mode == "presenter"; end
     def screen_mode?; self.mode == "screen"; end
@@ -69,6 +70,8 @@ class OvtoApp < Ovto::App
         actions.reset_rotation()
       when "b"
         actions.toggle_page_break()
+      when "e"
+        actions.toggle_emo_buttons()
       else
         console.log(event.JS['key'])
       end
@@ -166,6 +169,10 @@ class OvtoApp < Ovto::App
       return {page_break: !state.page_break}
     end
 
+    def toggle_emo_buttons
+      return {show_emo_buttons: !state.show_emo_buttons}
+    end
+
     def send_emo(str:)
       `App.presentation.send_action("receive_emo", {str: #{str}})`
       nil
@@ -187,7 +194,7 @@ class OvtoApp < Ovto::App
         else
           o StateInspector if state.show_state
           o Emos unless state.print_mode?
-          o FunButtons if state.atendee_mode? || state.presenter_mode?
+          o EmoButtons if state.show_emo_buttons
           o PageCount if state.presenter_mode?
           o PageControl unless state.screen_mode? || state.print_mode?
           o MySlide if state.atendee_mode?
@@ -292,10 +299,11 @@ class OvtoApp < Ovto::App
       end
     end
 
-    class FunButtons < Ovto::Component
+    class EmoButtons < Ovto::Component
       def render
-        o '.FunButtons' do
-          ["😍", "🎂"].each do |str|
+        o '.EmoButtons' do
+          (0x1F600..0x1F609).each do |c|
+            str = `String.fromCodePoint(c)`
             o 'input', {
               type: 'button',
               value: str,
