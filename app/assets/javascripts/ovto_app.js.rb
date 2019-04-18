@@ -82,27 +82,27 @@ class OvtoApp < Ovto::App
       return {slides: slides}
     end
 
-    def toggle_show_state(state:)
+    def toggle_show_state
       return {show_state: !state.show_state}
     end
 
-    def first_page(state:)
+    def first_page
       actions.change_page(to: 0)
     end
 
-    def last_page(state:)
+    def last_page
       actions.change_page(to: state.slides.length)
     end
 
-    def next_page(state:)
+    def next_page
       actions.change_page(diff: +1)
     end
 
-    def prev_page(state:)
+    def prev_page
       actions.change_page(diff: -1)
     end
 
-    def change_page(state:, to: nil, diff: nil)
+    def change_page(to: nil, diff: nil)
       if state.presenter_mode? || state.screen_mode?
         actions.change_presenter_page(to: to, diff: diff)
       else
@@ -110,7 +110,7 @@ class OvtoApp < Ovto::App
       end
     end
 
-    def change_presenter_page(state:, to: nil, diff: nil)
+    def change_presenter_page(to: nil, diff: nil)
       to ||= state.presenter_page + diff
       actions.update_presenter_page(page: to.clamp(0, state.slides.length-1))
     end
@@ -124,7 +124,7 @@ class OvtoApp < Ovto::App
       return {presenter_page: page}
     end
 
-    def change_my_page(state:, to: nil, diff: nil)
+    def change_my_page(to: nil, diff: nil)
       to ||= state.my_page + diff
       return {my_page: to.clamp(0, state.slides.length-1)}
     end
@@ -137,15 +137,15 @@ class OvtoApp < Ovto::App
       }
     end
 
-    def change_scale(state:, pt:)
+    def change_scale(pt:)
       return {scale: state.scale + pt}
     end
 
-    def rotate(state:)
+    def rotate
       return {rotation: state.rotation + 1}
     end
 
-    def toggle_rotation(state:)
+    def toggle_rotation
       if state.rotation_interval_id
         `clearInterval(#{state.rotation_interval_id})`
         return {rotation_interval_id: nil}
@@ -157,17 +157,17 @@ class OvtoApp < Ovto::App
       end
     end
 
-    def reset_rotation(state:)
+    def reset_rotation
       return {rotation: 0.0}
     end
 
-    def toggle_page_break(state:)
+    def toggle_page_break
       return {page_break: !state.page_break}
     end
   end
 
   class MainComponent < Ovto::Component
-    def render(state:)
+    def render
       o '.MainComponent' do
         if state.print_mode?
           o AllSlides
@@ -184,7 +184,7 @@ class OvtoApp < Ovto::App
     end
 
     class AllSlides < Ovto::Component
-      def render(state:)
+      def render
         o '.AllSlides' do
           state.slides.each do |slide|
             o PrintSlide, slide: slide
@@ -194,7 +194,7 @@ class OvtoApp < Ovto::App
     end
 
     class PrintSlide < Ovto::Component
-      def render(state:, slide:)
+      def render(slide:)
         style = {
           border: "1px solid black",
         }
@@ -206,7 +206,7 @@ class OvtoApp < Ovto::App
     end
 
     class StateInspector < Ovto::Component
-      def render(state:)
+      def render
         o '.StateInspector', style: {
           position: :fixed,
           top: 0,
@@ -223,7 +223,7 @@ class OvtoApp < Ovto::App
     end
 
     class Screen < Ovto::Component
-      def render(state:)
+      def render
         o '.Screen', style: {border: "none"} do
           o SlideContent, slide: state.get_slide(state.presenter_page)
         end
@@ -231,7 +231,7 @@ class OvtoApp < Ovto::App
     end
 
     class MySlide < Ovto::Component
-      def render(state:)
+      def render
         style = {
           border: "1px solid black",
           background: "#eee",
@@ -243,7 +243,7 @@ class OvtoApp < Ovto::App
     end
 
     class SlideContent < Ovto::Component
-      def render(state:, slide:)
+      def render(slide:)
         # Inject js VDOM obj
         o '.SlideContent', {
           style: {transform: "rotate(#{state.rotation}deg)"}
@@ -251,9 +251,8 @@ class OvtoApp < Ovto::App
       end
     end
 
-
     class PageControl < Ovto::Component
-      def render(state:)
+      def render
         o '.PageControl' do
           o 'input', {
             type: 'button',
