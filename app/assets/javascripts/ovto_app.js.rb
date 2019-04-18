@@ -173,6 +173,7 @@ class OvtoApp < Ovto::App
           o AllSlides
         else
           o StateInspector if state.show_state
+          o PageCount if state.presenter_mode?
           o PageControl unless state.screen_mode? || state.print_mode?
           o MySlide if state.atendee_mode?
           o Screen
@@ -264,6 +265,14 @@ class OvtoApp < Ovto::App
             value: '>',
             onclick: ->{ actions.next_page() }
           }
+        end
+      end
+    end
+
+    class PageCount < Ovto::Component
+      def render
+        o '.PageCount' do
+          "#{state.presenter_page+1}/#{state.slides.count}"
         end
       end
     end
