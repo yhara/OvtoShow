@@ -14,6 +14,16 @@ Server side
 - app/controllers/main_controller.rb
 - app/views/main/index.html.erb
 
+## Setup
+
+- `rails db:setup`
+- `EDITOR=vi rails credentials:edit`
+  
+    # Add this
+    ovto_show:
+      email: 'foo@bar'
+      password: 'xxx'
+
 ## License
 
 MIT

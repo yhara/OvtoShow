@@ -8,6 +8,7 @@ class MainController < ApplicationController
   end
 
   def presenter
+    require_login
     render :index
   end
 

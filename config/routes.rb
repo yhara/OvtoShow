@@ -5,5 +5,8 @@ Rails.application.routes.draw do
   get 'print', to: 'main#print'
   get 'slides', to: 'main#slides'
   root to: 'main#atendee'
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+
+  resources :user_sessions
+  get 'login' => 'user_sessions#new', :as => :login
+  delete 'logout' => 'user_sessions#destroy', :as => :logout
 end

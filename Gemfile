@@ -64,6 +64,7 @@ gem 'ovto', github: "yhara/ovto" #path: "~/proj/ovto"
 
 gem 'jb'
 gem 'commonmarker'
+gem 'sorcery'
 
 group :development do
   gem 'websocket-client-simple'
