@@ -14,7 +14,9 @@
       <p id="notice"><%= flash[:notice] %></p>
       <p id="alert"><%= flash[:alert] %></p>
     </div>
-    <div><%= link_to "Log out", logout_path, method: :delete %></div>
+    <% if action_name == "presenter" %>
+      <div><%= link_to "Log out", logout_path, method: :delete %></div>
+    <% end %>
     <%= yield %>
   </body>
 </html>
