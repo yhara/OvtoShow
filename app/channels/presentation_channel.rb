@@ -8,7 +8,10 @@ class PresentationChannel < ApplicationCable::Channel
   end
 
   def send_action(data)
-    # TODO: whitelist?
+    # Admin-only actions
+    if data['ovto_action'] == "set_presenter_page"
+      return unless user
+    end
     ActionCable.server.broadcast('the_channel', data)
   end
 end
