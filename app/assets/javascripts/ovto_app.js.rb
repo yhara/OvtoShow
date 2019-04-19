@@ -23,7 +23,6 @@ class OvtoApp < Ovto::App
     item :presenter_page, default: 0
     item :my_page, default: 0
     item :mode, default: nil
-    item :scale, default: 1.0
     item :rotation, default: 0.0
     item :rotation_interval_id, default: nil
     item :show_state, default: false
@@ -58,10 +57,6 @@ class OvtoApp < Ovto::App
         actions.last_page()
       when "r"
         actions.reload_slides()
-#      when "i"
-#        actions.change_scale(pt: -0.1)
-#      when "o"
-#        actions.change_scale(pt: +0.1)
       when "s"
         actions.toggle_show_state()
       when "x"
@@ -139,10 +134,6 @@ class OvtoApp < Ovto::App
       }.fail {|e|
         console.log("get_slides", e)
       }
-    end
-
-    def change_scale(pt:)
-      return {scale: state.scale + pt}
     end
 
     def rotate
