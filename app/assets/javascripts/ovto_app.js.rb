@@ -333,7 +333,7 @@ class OvtoApp < Ovto::App
               key: item[:key],
               style: {
                 position: :fixed,
-                top: "#{rand(600)}px",
+                top: "#{rand(300)}px",
                 left: "#{rand(600)}px",
                 'font-size': :normal,
                 transition: 'all 1000ms 0s ease',
