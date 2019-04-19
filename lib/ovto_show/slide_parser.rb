@@ -49,7 +49,7 @@ module OvtoShow
         children = node.map{|node| convert_node(node)}.compact
         if children.first.is_a?(String) && children.first.start_with?("~ ")
           {
-            nodeName: "pre",
+            nodeName: "div",
             attributes: {class: "presenter-note"},
             children: [children.join("\n")],
           }

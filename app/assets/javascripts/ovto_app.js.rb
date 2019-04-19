@@ -189,7 +189,8 @@ class OvtoApp < Ovto::App
           o PageCount if state.presenter_mode?
           o PageControl unless state.screen_mode? || state.print_mode?
           o MySlide if state.atendee_mode?
-          o Screen
+          o Screen unless state.presenter_mode?
+          o PresenterSlides if state.presenter_mode?
           if state.hide_presenter_note?
             o "style", ".presenter-note{ display: none; }"
           end
@@ -252,6 +253,25 @@ class OvtoApp < Ovto::App
         }
         o '.MySlide', {style: style} do
           o SlideContent, slide: state.get_slide(state.my_page)
+        end
+      end
+    end
+
+    class PresenterSlides < Ovto::Component
+      def render
+        o '.PresenterSlides', {style: {
+          display: :flex
+        }} do
+          o 'div', {style: {
+            border: "1px solid black",
+          }} do
+            o SlideContent, slide: state.get_slide(state.presenter_page)
+          end
+          o 'div', {style: {
+            background: "#eee",
+          }} do
+            o SlideContent, slide: state.get_slide(state.presenter_page + 1)
+          end
         end
       end
     end
