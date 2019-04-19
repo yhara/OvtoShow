@@ -1,6 +1,7 @@
 require 'ovto_show/slide_parser'
 
 class MainController < ApplicationController
+  skip_before_action :require_login, only: %w(screen atendee print slides)
   before_action :set_slides
 
   def screen
