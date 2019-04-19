@@ -36,7 +36,7 @@ class OvtoApp < Ovto::App
     def print_mode?; self.mode == "print"; end
 
     def hide_presenter_note?
-      %w(screen atendee).include?(self.mode)
+      %w(screen print).include?(self.mode)
     end
 
     def get_slide(page)
@@ -191,9 +191,9 @@ class OvtoApp < Ovto::App
           o MySlide if state.atendee_mode?
           o Screen unless state.presenter_mode?
           o PresenterSlides if state.presenter_mode?
-          if state.hide_presenter_note?
-            o "style", ".presenter-note{ display: none; }"
-          end
+        end
+        if state.hide_presenter_note?
+          o "style", ".presenter-note{ display: none; }"
         end
       end
     end
