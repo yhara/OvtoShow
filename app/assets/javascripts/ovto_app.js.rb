@@ -210,9 +210,7 @@ class OvtoApp < Ovto::App
 
     class PrintSlide < Ovto::Component
       def render(slide:)
-        style = {
-          border: "1px solid black",
-        }
+        style = {}
         style['page-break-after'] = :always if state.page_break
         o '.PrintSlide', {style: style} do
           o SlideContent, slide: slide
