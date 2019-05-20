@@ -23,6 +23,7 @@ Server side
     ovto_show:
       email: 'foo@bar'
       password: 'xxx'
+- `cp data/slide.sample.txt data/slide.txt`
 
 ## License
 
