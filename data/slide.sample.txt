@@ -1,8 +1,8 @@
 # Title
 
-- author: Jhon Doe
-- event: SomeEvent
-- data: 2019/03/18
+- Jhon Doe
+- at SomeEvent
+- 2019-03-18
 
 ## Slide1
 
