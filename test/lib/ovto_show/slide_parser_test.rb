@@ -6,35 +6,52 @@ class SlideParserTest < ActiveSupport::TestCase
     @parser = OvtoShow::SlideParser.new
   end
 
-  test "pages" do
+  test "inline" do
     slide = @parser.parse(<<~EOD)
-      # Presentaion 1
-      
-      - author: Jhon Doe
-      - event: Some Event
-      - date: 2018 01 01
-      
-      ## Page 1
-      
-      - a
-      - b
-      - c
+      # `E=MC^2`
     EOD
     expected = [
       {
-        layout: "title",
-        title: "Presentaion 1",
-        author: "Jhon Doe",
-        event: "Some Event",
-        date: "2018 01 01",
-      },
+        nodeName: "div",
+        attributes: {},
+        children: [
+          {
+            nodeName: "h1",
+            attributes: {},
+            children: [
+              {
+                nodeName: "code",
+                attributes: {},
+                children: ["E=MC^2"]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+    assert_equal expected, slide
+  end
+
+  test "link" do
+    slide = @parser.parse(<<~EOD)
+      # [Ruby](https://www.ruby-lang.org)
+    EOD
+    expected = [
       {
-        layout: "list",
-        title: "Page 1",
-        items: [
-          "a",
-          "b",
-          "c",
+        nodeName: "div",
+        attributes: {},
+        children: [
+          {
+            nodeName: "h1",
+            attributes: {},
+            children: [
+              {
+                nodeName: "a",
+                attributes: {href: "https://www.ruby-lang.org"},
+                children: ["Ruby"]
+              }
+            ]
+          }
         ]
       }
     ]

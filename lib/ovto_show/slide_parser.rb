@@ -13,12 +13,17 @@ module OvtoShow
         { 
           nodeName: "div",
           attributes: {},
-          children: nodes.map{|x| convert_node(x)}.compact,
+          children: convert_nodes(nodes)
         }
       }
     end
 
     private
+
+    def convert_nodes(nodes)
+      nodes.map{|x| convert_node(x)}.compact
+    end
+    alias convert_children convert_nodes
 
     def convert_node(node)
       case node.type
@@ -26,7 +31,7 @@ module OvtoShow
         {
           nodeName: "h#{node.header_level}",
           attributes: {},
-          children: [node.first_child&.string_content],
+          children: convert_children(node)
         }
       when :code_block
         {
@@ -43,10 +48,10 @@ module OvtoShow
         {
           nodeName: tag_name,
           attributes: {},
-          children: node.map{|node| convert_node(node)}.compact,
+          children: convert_children(node)
         }
       when :paragraph
-        children = node.map{|node| convert_node(node)}.compact
+        children = convert_children(node)
         if children.first.is_a?(String) && children.first.start_with?("~ ")
           {
             nodeName: "div",
@@ -69,6 +74,18 @@ module OvtoShow
           nodeName: "img",
           attributes: {src: node.url},
           children: []
+        }
+      when :code
+        {
+          nodeName: "code",
+          attributes: {},
+          children: [node.string_content]
+        }
+      when :link
+        {
+          nodeName: "a",
+          attributes: {href: node.url},
+          children: convert_children(node)
         }
       else
         node
